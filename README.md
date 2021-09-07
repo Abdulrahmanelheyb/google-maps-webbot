@@ -1,0 +1,1 @@
+# Gomawet (Google maps webbot) v1.0 beta
