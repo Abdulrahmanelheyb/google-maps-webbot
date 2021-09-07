@@ -1,5 +1,7 @@
 import os
+from selenium.webdriver import Chrome
 from selenium.webdriver import Edge
+from selenium.webdriver import Opera
 from xlsxwriter import Workbook
 from win10toast import ToastNotifier
 
@@ -40,6 +42,11 @@ def exceute():
 
 trueMsg = "Successfuly"
 falseMsg = "Failed"
+browsers = {
+    1: "Chrome",
+    2: "Edge",
+    3: "Opera"
+}
 
 
 def get_file_path(filename) -> str:
@@ -64,8 +71,14 @@ def kill_web_driver_edge():
         print(ex)
 
 
-def get_driver():
-    return Edge('C:\\DevSoftwares\\WebDrivers\\MicrosoftWebDriver.exe')
+def get_driver(browser_id):
+    browser_id = int(browser_id)
+    if browser_id == 1:
+        return Chrome(executable_path='drivers/chromedriver.exe')
+    elif browser_id == 2:
+        return Edge(executable_path='drivers/microsoftedgewebdriver.exe')
+    elif browser_id == 3:
+        return Opera(executable_path='drivers/operadriver.exe')
 
 
 def write_data(filename, companies):
@@ -73,25 +86,34 @@ def write_data(filename, companies):
     workbook = Workbook(filename)
     worksheet = workbook.add_worksheet()
     worksheet.write(row, 0, "Adi")
-    worksheet.write(row, 1, "Mail Adresi")
-    worksheet.write(row, 2, "Web site")
-    worksheet.write(row, 3, "Ulke")
-    worksheet.write(row, 4, "GSM")
+    worksheet.write(row, 1, "Web site")
+    worksheet.write(row, 2, "Ulke")
+    worksheet.write(row, 3, "GSM")
     row += 1
 
     worksheet.set_column("A:B", 100)
 
     for company in companies:
+
+        # First check if has null data.
+        company_has_none_value = False
+        for key in company:
+            if company[key] is None:
+                companies.remove(company)
+                company_has_none_value = True
+                continue
+
+        if company_has_none_value:
+            continue
+
         if "name" in company:
             worksheet.write(row, 0, company["name"])
-        if "email" in company:
-            worksheet.write(row, 1, company["email"])
         if "web_site" in company:
-            worksheet.write(row, 2, company["web_site"])
+            worksheet.write(row, 1, company["web_site"])
         if "country_name" in company:
-            worksheet.write(row, 3, company["country_name"])
+            worksheet.write(row, 2, company["country_name"])
         if "company_gsm" in company:
-            worksheet.write(row, 4, company["company_gsm"])
+            worksheet.write(row, 3, company["company_gsm"])
 
         row += 1
 

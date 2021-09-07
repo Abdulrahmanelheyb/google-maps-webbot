@@ -4,7 +4,9 @@ from selenium.common.exceptions import *
 
 
 def exceute():
-    driver = base.get_driver()
+    print('1-Chrome, 2-Edge, 3-Opera')
+    browser_id = input('Lütfen internet tarayıcı numarasi giriniz: ')
+    driver = base.get_driver(browser_id)
     filename = base.get_file_path(f'companies-info')
     companies = []
     links = []
@@ -33,11 +35,14 @@ def exceute():
             except Exception:
                 pass
 
+        time.sleep(1)
         if driver.find_element_by_xpath('//*[@id="ppdPk-Ej1Yeb-LgbsSe-tJiF1e"]').is_enabled():
             driver.find_element_by_xpath('//*[@id="ppdPk-Ej1Yeb-LgbsSe-tJiF1e"]').click()
         else:
             break
 
+    # Loop on links
+    links = list(dict.fromkeys(links))
     for link in links:
         company = {}
 
@@ -59,6 +64,7 @@ def exceute():
             except NoSuchElementException:
                 pass
 
+            # Loop on informations boxes to get wanted info.
             info_section_count = len(driver.find_elements_by_xpath('//*[@id="pane"]/div/div[1]/div/div/div[7]/div'))
             for indx in range(1, info_section_count + 1):
 
@@ -68,7 +74,7 @@ def exceute():
                     if 'Adres:' in res:
                         res = res.replace('Adres:', '')
                         res = res.split(',')
-                        country_name = res[:1]
+                        country_name = res[-1]
                         continue
 
                     if 'Web sitesi:' in res:
@@ -83,6 +89,8 @@ def exceute():
 
                 except Exception as ex:
                     print(ex)
+                    pass
+                except NoSuchElementException:
                     pass
 
             # company_email = driver.find_element_by_xpath('')
@@ -99,7 +107,9 @@ def exceute():
 
     base.write_data(filename, companies)
     driver.close()
-    return [True, __name__]
+    return [True, filename]
 
 
-exceute()
+rlt = exceute()
+base.notify(rlt[0], rlt[1])
+base.kill_web_driver_edge()
