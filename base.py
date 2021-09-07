@@ -99,7 +99,6 @@ def write_data(filename, companies):
         company_has_none_value = False
         for key in company:
             if company[key] is None:
-                companies.remove(company)
                 company_has_none_value = True
                 continue
 
