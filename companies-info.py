@@ -9,7 +9,9 @@ def exceute():
     companies = []
     links = []
 
-    driver.get('https://www.google.com/maps/search/Bursa+wordpress/@40.204474,29.0049035,12z')
+    keyword = input('Arama : ')
+
+    driver.get(f'https://www.google.com/maps/search/{keyword}')
     time.sleep(3)
 
     while True:
@@ -65,15 +67,9 @@ def exceute():
                     res = driver.find_element_by_xpath(path).get_attribute('aria-label')
                     if 'Adres:' in res:
                         res = res.replace('Adres:', '')
-                        if '/' in res:
-                            res = res.split('/')
-                            res = res[1].split(',')
-                            country_name = res[1]
-                            continue
-                        elif ',' in res:
-                            res = res[1].split(',')
-                            country_name = res[1]
-                            continue
+                        res = res.split(',')
+                        country_name = res[:1]
+                        continue
 
                     if 'Web sitesi:' in res:
                         res = res.replace('Web sitesi:', '')
