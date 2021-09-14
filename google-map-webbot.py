@@ -1,5 +1,6 @@
 import time
 import base
+from pathlib import Path
 from selenium.common.exceptions import *
 
 
@@ -7,7 +8,7 @@ def exceute():
     print('1-Chrome, 2-Edge, 3-Opera')
     browser_id = input('Lütfen internet tarayıcı numarasi giriniz: ')
     driver = base.get_driver(browser_id)
-    filename = base.get_file_path(f'companies-info')
+    filename = base.get_file_path(Path(__file__).stem)
     companies = []
     links = []
 

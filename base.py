@@ -75,11 +75,11 @@ def kill_web_driver_edge():
 def get_driver(browser_id):
     browser_id = int(browser_id)
     if browser_id == 1:
-        # chrome_options = webdriver.ChromeOptions()
-        # chrome_options.add_argument('--disable-logging')
-        # chrome_options.add_argument('--log-level=3')
-        # chrome_options.add_argument('--output=/dev/null')
-        return Chrome(executable_path='drivers/chromedriver.exe', service_log_path='/dev/null')
+        chrome_options = webdriver.ChromeOptions()
+        chrome_options.add_argument('--disable-logging')
+        chrome_options.add_argument('--log-level=3')
+        chrome_options.add_argument('--output=/dev/null')
+        return Chrome(executable_path='drivers/chromedriver.exe', options=chrome_options)
     elif browser_id == 2:
         return Edge(executable_path='drivers/microsoftedgewebdriver.exe')
     elif browser_id == 3:
@@ -96,7 +96,7 @@ def write_data(filename, companies):
     worksheet.write(row, 3, "GSM")
     row += 1
 
-    worksheet.set_column("A:B", 100)
+    worksheet.set_column("A:D", 50)
 
     for company in companies:
 
