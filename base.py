@@ -1,4 +1,5 @@
 import os
+from selenium import webdriver
 from selenium.webdriver import Chrome
 from selenium.webdriver import Edge
 from selenium.webdriver import Opera
@@ -74,7 +75,11 @@ def kill_web_driver_edge():
 def get_driver(browser_id):
     browser_id = int(browser_id)
     if browser_id == 1:
-        return Chrome(executable_path='drivers/chromedriver.exe')
+        # chrome_options = webdriver.ChromeOptions()
+        # chrome_options.add_argument('--disable-logging')
+        # chrome_options.add_argument('--log-level=3')
+        # chrome_options.add_argument('--output=/dev/null')
+        return Chrome(executable_path='drivers/chromedriver.exe', service_log_path='/dev/null')
     elif browser_id == 2:
         return Edge(executable_path='drivers/microsoftedgewebdriver.exe')
     elif browser_id == 3:
@@ -96,13 +101,7 @@ def write_data(filename, companies):
     for company in companies:
 
         # First check if has null data.
-        company_has_none_value = False
-        for key in company:
-            if company[key] is None:
-                company_has_none_value = True
-                continue
-
-        if company_has_none_value:
+        if company["company_gsm"] is None:
             continue
 
         if "name" in company:
